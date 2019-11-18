@@ -15,26 +15,40 @@
 
     $login_successful = false;
     if (!is_null($user) && !is_null($pass)) {
-        // For Testing
+
+        // User
         if ($user == 'root' && $pass == 'toor') {
-            $user_id = 23;
-            $firstname = 'Admin';
-            $lastname = 'Admin';
-            $login_successful = true;
-        }        
-        // Set Token when Login was successful
-        if ($login_successful) {
+             $login_successful = true;
             // Generate Token
             $token_data = array();
-            $token_data['uid'] = $user_id;
-            $token_data['firstname'] = $firstname;
-            $token_data['lastname'] = $lastname;
-            // Token vaild for 60min
-            $token_data['exp'] = time() + 60 /*sec*/ * 60 /*min*/ * 24 /*hours*/;
+            $token_data['iss'] = "liam3";
+            $token_data['iat'] = time();
+            $token_data['permissions'] = ["everything"];
+            $token_data['firstname'] = "Test";
+            $token_data['lastname'] = "User";
+            $token_data['uid'] = 23;
             $token = JWT::encode($token_data, AUTH_KEY);
             echo json_encode(array('success' => 1, 'token' => $token));
             exit();
-        } else {
+        } 
+
+        // MACHINE
+        if ($user == 'm' && $pass == 'm') {
+            $login_successful = true;
+            // Generate Token
+            $token_data = array();
+            $token_data['iss'] = "liam3";
+            $token_data['iat'] = time();
+            $token_data['permissions'] = ["login"];
+            $token = JWT::encode($token_data, AUTH_KEY);
+            echo json_encode(array('success' => 1, 'token' => $token));
+            exit();
+        } 
+
+
+
+        // Set Token when Login was successful
+        if (!$login_successful) {
             echo json_encode(array('success' => 0, 'errormsg' => "Login was not successful!"));
             exit();
         }
@@ -52,7 +66,7 @@
   </head>
   <body>
     <div class="container">
-        <div class="row mt-5 text-light">
+        <div class="row mt-5">
             <div class="col-xs-1 col-md-3 col-lg-4"></div>
             <form class="form col-xs-10 col-md-6 col-lg-4" method="post" action="login.php">
                 <h2 class="display-4 mb-4 text-center" style="font-size: 2.5em;">Please login</h2>
